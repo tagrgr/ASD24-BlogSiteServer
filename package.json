@@ -1,0 +1,24 @@
+{
+  "name": "asd24-blogsiteserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taggrgr/ASD24-BlogSiteServer.git"
+  },
+  "author": "Tiago",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/taggrgr/ASD24-BlogSiteServer/issues"
+  },
+  "homepage": "https://github.com/taggrgr/ASD24-BlogSiteServer#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0"
+  }
+}

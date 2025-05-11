@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEST BLOG</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav><a href="/">HOME</a></nav>
+    <!-- 
+    Post title
+    Post content
+    Post Author
+    Post Date
+    -->
+    <article>
+        <h2>POST TITLE</h2>
+        <p>
+            Post content! This will be my personal portfolio.
+        </p>
+        <p>AUTHOR</p>
+        <p>DATE</p>
+    </article>
+    
+    <form action="/new-blog-post" method="post">
+        <!-- 
+        Author
+        Title
+        Content
+        Submit
+         -->
+         <h2>MAKE NEW BLOG POST</h2>
+         <label for="author">AUTHOR:</label>
+         <input type="text" name="author" id="author">
+         <label for="title">TITLE:</label>
+         <input type="text" name="title" id="title">
+         <label for="content">CONTENT:</label>
+         <textarea name="content" id="content"></textarea>
+         <button type="submit" id="submit">SUBMIT POST</button>
+    </form>
+</body>
+<script src="script.js"></script>
+</html>
