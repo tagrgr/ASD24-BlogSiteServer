@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/taggrgr/ASD24-BlogSiteServer#readme",
   "dependencies": {
+    "asd24-blogsiteserver": "file:",
     "body-parser": "^2.2.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0"

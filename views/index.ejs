@@ -14,15 +14,17 @@
     Post Author
     Post Date
     -->
-    <article>
-        <h2>POST TITLE</h2>
-        <p>
-            Post content! This will be my personal portfolio.
-        </p>
-        <p>AUTHOR</p>
-        <p>DATE</p>
-    </article>
-    
+    <% blogPosts.slice().reverse().forEach(post => { %>
+        <article>
+            <h2><%= post.title %></h2>
+            <p>
+                <%= post.content %>
+            </p>
+            <p><%= post.author %></p>
+            <p><%= post.datetime %></p>
+        </article>     
+    <% }) %>
+
     <form action="/new-blog-post" method="post">
         <!-- 
         Author
@@ -39,6 +41,7 @@
          <textarea name="content" id="content"></textarea>
          <button type="submit" id="submit">SUBMIT POST</button>
     </form>
+    <%- include('../partials/blog-post.ejs') %>
 </body>
 <script src="script.js"></script>
 </html>
