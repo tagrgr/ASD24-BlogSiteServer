@@ -7,11 +7,49 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view-engine", "ejs");
 
 let blogPosts = [];
+let numPostsPerPage = 5;
+
+function makeDummyBlogPosts(numPosts, blogPosts) {
+    for (let i = 0; i < numPosts; i++) {
+        blogPosts.push({
+            author: "Author: " + i,
+            title: "TEST" + i,
+            content: "Text",
+            datetime: new Date().toLocaleString()
+        })
+    }
+}
+makeDummyBlogPosts(98, blogPosts);
+
+function getDisplayPosts(numPostsPerPage, pagenum, blogPosts) {
+    /*
+    pagenum = 1
+    posts 0-4
+    
+    pagenum = 2
+    posts 5-9
+
+    pagenum = 10
+    posts (10-1)*5 - (10*5-1)
+    45-49
+    */ 
+   let start = (pagenum - 1) * numPostsPerPage;
+   let end = pagenum * numPostsPerPage;
+   return blogPosts.slice().reverse().slice(start, end);
+}
 
 app.get("/", (req, res) => {
     // res.sendFile("index.html", {root: __dirname});
-    res.render("index.ejs", { blogPosts });
+    let pagenum;
+    if (!req.query.pagenum) pagenum = 1;
+    else pagenum = req.query.pagenum;
+    console.log(req.query.pagenum);
+    res.render("index.ejs", { blogPosts: getDisplayPosts(numPostsPerPage, pagenum, blogPosts) });
 });
+
+// app.get("/page", (req, res) => {
+//     res.render("index.ejs");
+// });
 
 app.post('/new-blog-post', (req, res) => {
     console.log(req.body.author);
