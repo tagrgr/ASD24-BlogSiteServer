@@ -8,6 +8,7 @@ app.set("view-engine", "ejs");
 
 let blogPosts = [];
 let numPostsPerPage = 5;
+let numPagesToDisplay = 5;
 
 function makeDummyBlogPosts(numPosts, blogPosts) {
     for (let i = 0; i < numPosts; i++) {
@@ -44,7 +45,12 @@ app.get("/", (req, res) => {
     if (!req.query.pagenum) pagenum = 1;
     else pagenum = req.query.pagenum;
     console.log(req.query.pagenum);
-    res.render("index.ejs", { blogPosts: getDisplayPosts(numPostsPerPage, pagenum, blogPosts) });
+    res.render("index.ejs", { 
+        blogPosts: getDisplayPosts(numPostsPerPage, pagenum, blogPosts),
+        numPages: Math.ceil(blogPosts.length / numPostsPerPage),
+        pagenum, // same as pagenum: pagenum
+        numPagesToDisplay
+     });
 });
 
 // app.get("/page", (req, res) => {
