@@ -1,10 +1,42 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const passport = require("passport");
+const session = require("express-session");
+const mongoose = require("mongoose");
+const passportLocalMongoose = require("passport-local-mongoose");
+const MongoDBStore = require("connect-mongo-session")(session);
 
 const PORT = 3000;
 app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view-engine", "ejs");
+
+mongoose.connect("mongodb://127.0.0.1:27017/bestBlog")
+.then(conn=> console.log(conn.models));
+
+const Schema = mongoose.Schema;
+
+const userSchema = new Schema({
+    username: String,
+    email: String,
+    password: String,
+});
+
+// Hash and salt the password
+// Use the passport-local-mongoose plugin to add username and password fields
+userSchema.plugin(passportLocalMongoose);
+
+// Helper db object
+// const db = mongoose.connection;
+const User = mongoose.model("User", userSchema);
+
+// Manage authentication and cookies
+app.use(session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+    store: new Mongo
+}));
 
 let blogPosts = [];
 let numPostsPerPage = 5;
@@ -36,10 +68,11 @@ function getDisplayPosts(numPostsPerPage, pagenum, blogPosts) {
     */ 
    let start = (pagenum - 1) * numPostsPerPage;
    let end = pagenum * numPostsPerPage;
-   return blogPosts.slice().reverse().slice()(start, end);
+   return blogPosts.slice().reverse().slice(start, end);
 }
 
 app.get("/", (req, res) => {
+    console.log(req);
     // res.sendFile("index.html", {root: __dirname});
     let pagenum;
     if (!req.query.pagenum) pagenum = 1;

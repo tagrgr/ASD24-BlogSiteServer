@@ -19,7 +19,13 @@
   "dependencies": {
     "asd24-blogsiteserver": "file:",
     "body-parser": "^2.2.0",
+    "connect-mongodb-session": "^5.0.0",
     "ejs": "^3.1.10",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.15.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^8.0.0"
   }
 }
