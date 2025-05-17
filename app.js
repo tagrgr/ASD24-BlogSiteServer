@@ -4,7 +4,7 @@ const passport = require("passport");
 const session = require("express-session");
 const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
-const MongoDBStore = require("connect-mongo-session")(session);
+const MongoDBStore = require("connect-mongodb-session")(session);
 
 const PORT = 3000;
 app = express();
@@ -19,7 +19,6 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     username: String,
     email: String,
-    password: String,
 });
 
 // Hash and salt the password
@@ -35,8 +34,20 @@ app.use(session({
     secret: "secret",
     resave: false,
     saveUninitialized: false,
-    store: new Mongo
+    store: new MongoDBStore({
+        mongoURL: "mongodb://127.0.0.1:27017",
+        collection: "bestBlog"
+    }, error => console.log(error))
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+const LocalStrategy = require("passport-local").Strategy;
+passport.use(new LocalStrategy(User.authenticate()));
 
 let blogPosts = [];
 let numPostsPerPage = 5;
@@ -72,10 +83,9 @@ function getDisplayPosts(numPostsPerPage, pagenum, blogPosts) {
 }
 
 app.get("/", (req, res) => {
-    console.log(req);
     // res.sendFile("index.html", {root: __dirname});
     let pagenum;
-    if (!req.query.pagenum) pagenum = 1;
+    if (!req.query.pagenum) pagenum = 1; // default to page 1
     else pagenum = req.query.pagenum;
     console.log(req.query.pagenum);
     res.render("index.ejs", { 
@@ -103,6 +113,25 @@ app.post('/new-blog-post', (req, res) => {
     })
     res.redirect("/");
 });
+
+app.get('/create-account', (req, res) => {
+    if (req.isAuthenticated()) res.redirect("/pagenum=1");
+    res.render("login.ejs");
+    });
+
+app.post("/create-account", (req, res) => {
+    if (req.isAuthenticated()) res.redirect("/pagenum=1");
+    User.register(new User({
+        username: req.body.username,
+    }), req.body.password, (error, user) => {
+        if (error) console.log(error);
+        passport.authenticate("local"), (req, res, () => {
+            res.redirect("/?pagenum=1");
+        })
+    })
+});
+
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
