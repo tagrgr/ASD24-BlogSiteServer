@@ -40,14 +40,33 @@
          <button type="submit" id="submit">SUBMIT POST</button>
     </form>
     <nav id="pagination">
-        <a href="<%= pagenum -1 %>"><button id="previous-page">Previous</button></a>
-        <% let pageOffSet = Math.floor(numPagesToDisplay/2) %>
-        <% let startPage = pagenum - pageOffSet %>
-        <% let endPage = pagenum + pageOffSet %>
-            <% for( let i = 0; i < array.length; i++ ) { %>
-                <a href="/?pagenum=<%= i %>"><button id="page-<%= i %>"><%= i %></button></a>
+        <!-- +pagenum
+        temporarily converts pagenum to a number before doing the operation -->
+        <% if (pagenum == 1) { %>
+            <a href="/"><button id="previous-page" disabled>Previous</button></a>
+        <% } else { %>
+            <a href="/?pagenum=<%= +pagenum -1 %>"><button id="previous-page">Previous</button></a>
+        <% } %>
+
+            <% let pageOffSet = Math.floor(+numPagesToDisplay/2) %>
+            <% let startPage = +pagenum - pageOffSet %>
+                <% startPage -= Math.abs(Math.min(0, +numPages-(+pagenum+pageOffSet))) %>
+
+            <% let endPage = +pagenum + pageOffSet %>
+            <%# If the pagenum is at the start, we want to increase endPage to display more pages %>
+                <% endPage += Math.abs(Math.min(0, +pagenum-pageOffSet-1)) %>
+
+            <% for( let i = startPage; i <= endPage; i++ ) { %>
+                <% if (i > 0 && i <= numPages) { %>
+                    <a href="/?pagenum=<%= i %>"><button id="page-<%= i %>"><%= i %></button></a>
+                <% } %>   
             <% } %>
-        <a href="<%= pagenum +1 %>"><button id="next-page">Next</button></a>
+
+        <% if (pagenum == numPages) { %>
+            <a href="/?pagenum=<%= +pagenum%>"><button id="next-page" disabled>Next</button></a>
+        <% } else { %>    
+            <a href="/?pagenum=<%= +pagenum + 1 %>"><button id="next-page">Next</button></a>
+        <% } %>
     </nav>
 </body>
 <script src="script.js"></script>

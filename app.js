@@ -36,7 +36,7 @@ function getDisplayPosts(numPostsPerPage, pagenum, blogPosts) {
     */ 
    let start = (pagenum - 1) * numPostsPerPage;
    let end = pagenum * numPostsPerPage;
-   return blogPosts.slice().reverse().slice(start, end);
+   return blogPosts.slice().reverse().slice()(start, end);
 }
 
 app.get("/", (req, res) => {
