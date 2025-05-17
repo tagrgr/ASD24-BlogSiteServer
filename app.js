@@ -116,22 +116,32 @@ app.post('/new-blog-post', (req, res) => {
 
 app.get('/create-account', (req, res) => {
     if (req.isAuthenticated()) res.redirect("/pagenum=1");
-    res.render("login.ejs");
+    res.render("create-account.ejs");
     });
 
 app.post("/create-account", (req, res) => {
+    console.log(req.body);
     if (req.isAuthenticated()) res.redirect("/pagenum=1");
     User.register(new User({
         username: req.body.username,
+        email: req.body.email
     }), req.body.password, (error, user) => {
         if (error) console.log(error);
-        passport.authenticate("local"), (req, res, () => {
+        console.log("Created");
+        passport.authenticate("local", {failureRedirect: "/login2"})(req, res, () => {
             res.redirect("/?pagenum=1");
         })
     })
 });
 
+app.get("/login", (req, res) => {
+    if (req.isAuthenticated()) res.redirect("/pagenum=1");
+    res.render("login.ejs");
+});
 
+app.post('/login', passport.authenticate('local', {failureRedirect: "/login"}), (req, res) => {
+    res.redirect("/?pagenum=1");
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
