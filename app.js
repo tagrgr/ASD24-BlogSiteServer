@@ -29,6 +29,15 @@ userSchema.plugin(passportLocalMongoose);
 // const db = mongoose.connection;
 const User = mongoose.model("User", userSchema);
 
+const blogPostSchema = new Schema({
+    author: String,
+    title: String,
+    content: String,    
+    datetime: Date
+});
+
+const BlogPost = mongoose.model("BlogPost", blogPostSchema);
+
 // Manage authentication and cookies
 app.use(session({
     secret: "secret",
@@ -65,6 +74,15 @@ function makeDummyBlogPosts(numPosts, blogPosts) {
 }
 makeDummyBlogPosts(98, blogPosts);
 
+//Load all posts into the server memory on startup
+    //You dont need to query the database, which can take time
+
+//Fetch posts as the user requests them
+    //Takes less RAM
+
+//Fetch posts as the user requests them and keep them in memory for some time after
+    //Caching
+
 function getDisplayPosts(numPostsPerPage, pagenum, blogPosts) {
     /*
     pagenum = 1
@@ -85,6 +103,10 @@ function getDisplayPosts(numPostsPerPage, pagenum, blogPosts) {
 app.get("/", (req, res) => {
     // res.sendFile("index.html", {root: __dirname});
     let pagenum;
+    if (!req.isAuthenticated()) {
+        res.redirect("/login");
+        return;
+    }
     if (!req.query.pagenum) pagenum = 1; // default to page 1
     else pagenum = req.query.pagenum;
     console.log(req.query.pagenum);
@@ -105,37 +127,49 @@ app.post('/new-blog-post', (req, res) => {
     console.log(req.body.title);
     console.log(req.body.content);
     console.log(new Date().toLocaleString());
-    blogPosts.push({
+    let blogPost = new BlogPost({
         author: req.body.author,
         title: req.body.title,
         content: req.body.content,
-        datetime: new Date().toLocaleString()
+        datetime: new Date()
+    });
+    blogPost.save()
+    .then(savedPost => {
+        blogPosts.push({
+            author: req.body.author,
+            title: req.body.title,
+            content: req.body.content,
+            datetime: new Date().toLocaleString()
+        });
+        console.log(savedPost);
     })
+    
+    // Save to DB first or save to array first?
     res.redirect("/");
 });
 
 app.get('/create-account', (req, res) => {
-    if (req.isAuthenticated()) res.redirect("/pagenum=1");
+    if (req.isAuthenticated()) res.redirect("/?pagenum=1");
     res.render("create-account.ejs");
     });
 
 app.post("/create-account", (req, res) => {
     console.log(req.body);
-    if (req.isAuthenticated()) res.redirect("/pagenum=1");
+    if (req.isAuthenticated()) res.redirect("/?pagenum=1");
     User.register(new User({
         username: req.body.username,
         email: req.body.email
     }), req.body.password, (error, user) => {
         if (error) console.log(error);
         console.log("Created");
-        passport.authenticate("local", {failureRedirect: "/login2"})(req, res, () => {
+        passport.authenticate("local", {failureRedirect: "/login2"})    (req, res, () => {
             res.redirect("/?pagenum=1");
-        })
-    })
+        });
+    });
 });
 
-app.get("/login", (req, res) => {
-    if (req.isAuthenticated()) res.redirect("/pagenum=1");
+app.get('/login', (req, res) => {
+    if (req.isAuthenticated()) res.redirect("/?pagenum=1");
     res.render("login.ejs");
 });
 
@@ -146,4 +180,4 @@ app.post('/login', passport.authenticate('local', {failureRedirect: "/login"}), 
 app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
 
-})
+});
