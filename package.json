@@ -1,5 +1,5 @@
 {
-  "name": "asd24-blogsiteserver",
+  "name": "asd24-blog-site-server",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -8,24 +8,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/taggrgr/ASD24-BlogSiteServer.git"
+    "url": "git+https://github.com/sweisscct/ASD24-Blog-Site-Server.git"
   },
-  "author": "Tiago",
+  "author": "Sam",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/taggrgr/ASD24-BlogSiteServer/issues"
+    "url": "https://github.com/sweisscct/ASD24-Blog-Site-Server/issues"
   },
-  "homepage": "https://github.com/taggrgr/ASD24-BlogSiteServer#readme",
+  "homepage": "https://github.com/sweisscct/ASD24-Blog-Site-Server#readme",
   "dependencies": {
-    "asd24-blogsiteserver": "file:",
+    "asd24-blog-site-server": "file:",
     "body-parser": "^2.2.0",
     "connect-mongodb-session": "^5.0.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-session": "^1.18.1",
-    "mongoose": "^8.15.0",
+    "mongoose": "^8.14.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^8.0.0"
+    "passport-local-mongoose": "^8.0.0",
+    "ws": "^8.18.2"
   }
 }

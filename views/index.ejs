@@ -3,68 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BEST BLOG</title>
+    <title>Best Blog</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav><a href="/">HOME</a></nav>
+    <nav><a href="/">Home</a></nav>
     <!-- 
     Post title
     Post content
     Post Author
     Post Date
     -->
-    <% blogPosts.slice().reverse().forEach(post => { %>
+    <% blogPosts.forEach(post => { %>
         <article>
             <h2><%= post.title %></h2>
-            <p><%= post.content %></p>
+            <p>
+                <%= post.content %>
+            </p>
             <p><%= post.author %></p>
             <p><%= post.datetime %></p>
-        </article>     
+        </article>        
     <% }) %>
-
+    
     <form action="/new-blog-post" method="post">
         <!-- 
-        Author
+        Author 
         Title
         Content
         Submit
-         -->
-         <h2>MAKE NEW BLOG POST</h2>
-         <label for="author">AUTHOR:</label>
-         <input type="text" name="author" id="author">
-         <label for="title">TITLE:</label>
-         <input type="text" name="title" id="title">
-         <label for="content">CONTENT:</label>
-         <textarea name="content" id="content"></textarea>
-         <button type="submit" id="submit">SUBMIT POST</button>
+        -->
+        <h2>Make new blog post</h2>
+        <label for="author">Author:</label>
+        <input type="text" name="author" id="author">
+        <label for="title">Title:</label>
+        <input type="text" name="title" id="title">
+        <label for="content">Content:</label>
+        <textarea name="content" id="content"></textarea>
+        <button type="submit" id="submit">Submit Post</button>
     </form>
     <nav id="pagination">
-        <!-- +pagenum
-        temporarily converts pagenum to a number before doing the operation -->
+        <!-- +pagenum 
+         temporarily converts pagenum to a number before doing the operation -->
         <% if (pagenum == 1) { %>
             <a href="/"><button id="previous-page" disabled>Previous</button></a>
         <% } else { %>
-            <a href="/?pagenum=<%= +pagenum -1 %>"><button id="previous-page">Previous</button></a>
+            <a href="/?pagenum=<%= +pagenum - 1 %>"><button id="previous-page">Previous</button></a>
         <% } %>
 
-            <% let pageOffSet = Math.floor(+numPagesToDisplay/2) %>
-            <% let startPage = +pagenum - pageOffSet %>
-                <% startPage -= Math.abs(Math.min(0, +numPages-(+pagenum+pageOffSet))) %>
+            <% let pageOffset = Math.floor(+numPagesToDisplay/2) %>
+            <% let startPage = +pagenum - pageOffset %>
+            <% startPage -= Math.abs(Math.min(0, +numPages-(+pagenum+pageOffset))) %>
 
-            <% let endPage = +pagenum + pageOffSet %>
+            <% let endPage = +pagenum + pageOffset %>
             <%# If the pagenum is at the start, we want to increase endPage to display more pages %>
-                <% endPage += Math.abs(Math.min(0, +pagenum-pageOffSet-1)) %>
+            <% endPage += Math.abs(Math.min(0, +pagenum-pageOffset-1)) %>
 
             <% for( let i = startPage; i <= endPage; i++ ) { %>
                 <% if (i > 0 && i <= numPages) { %>
                     <a href="/?pagenum=<%= i %>"><button id="page-<%= i %>"><%= i %></button></a>
-                <% } %>   
+                <% } %>
             <% } %>
 
         <% if (pagenum == numPages) { %>
             <a href="/?pagenum=<%= +pagenum%>"><button id="next-page" disabled>Next</button></a>
-        <% } else { %>    
+        <% } else { %>
             <a href="/?pagenum=<%= +pagenum + 1 %>"><button id="next-page">Next</button></a>
         <% } %>
     </nav>

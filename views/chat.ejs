@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Blog Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Display chats -->
+    <div id="display-chats"></div>
+    <!-- Write chats -->
+    <form action="/" method="">
+        <!-- 
+        Author 
+        Title
+        Content
+        Submit
+        -->
+        <h2>Make new chat</h2>
+        <label for="author">Author:</label>
+        <input type="text" name="author" id="author">
+        <label for="message">Message:</label>
+        <textarea name="message" id="message"></textarea>
+        <button type="submit" id="submit">Send Chat</button>
+    </form>      
+</body>
+<script>
+    const PORT = 3000;
+    const url = "ws://localhost:"+PORT;
+    const wsServer = new WebSocket(url);
+    const displayChatsDiv = document.getElementById("display-chats");
+
+    const newMessageInput = document.getElementById("message");
+    const authorInput = document.getElementById("author");
+    function sendMessage() {
+        const data = {
+            author: authorInput.value,
+            newMessage: newMessageInput.value
+        }
+        // console.log(data);
+        // console.log(JSON.stringify(data));
+        wsServer.send(JSON.stringify(data));
+    }
+    const sendMessageButton = document.getElementById("submit");
+    sendMessageButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        sendMessage();
+        // console.log(newMessageInput.value)
+
+    })
+
+    wsServer.onmessage = (wsRequest) => {
+        console.log(wsRequest);
+        const { data } = wsRequest;
+        // console.log(data);
+        displayNewMessage(JSON.parse(data));
+    }
+
+    function displayNewMessage(data) {
+        let newP = document.createElement("p");
+        newP.innerText = `Message from: ${data.author}\n${data.newMessage}`;
+        displayChatsDiv.appendChild(newP);
+    }
+</script>
+</html>

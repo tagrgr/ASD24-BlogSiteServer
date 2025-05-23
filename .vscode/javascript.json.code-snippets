@@ -56,5 +56,5 @@
 			"\tconsole.log(`${new Date()}: Listening on port: ${ PORT}`);",
 			"});"
 		]
-	},
+	}
 }
